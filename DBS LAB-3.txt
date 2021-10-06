@@ -1,0 +1,104 @@
+ CREATE TABLE solar_panel (PV VARCHAR(25),capacity INT,price INT,warranty INT);
+ ALTER TABLE solar_panel ADD PRIMARY KEY (PV);
+ ALTER TABLE solar_panel ADD type VARCHAR(25);
+ desc solar_panel;
+ 
+CREATE TABLE distributor (d_TIN INT,d_name VARCHAR(25),d_addr VARCHAR(50),d_contact VARCHAR(25), PRIMARY KEY (d_TIN));
+CREATE TABLE users (u_buildno INT, u_name VARCHAR(25), u_area VARCHAR(25), PRIMARY KEY (u_buildno));
+desc users;
+
+
+CREATE TABLE sold_by (d_TIN INT,PV VARCHAR(25), PRIMARY KEY(d_TIN,PV),FOREIGN KEY (d_TIN) REFERENCES distributor(d_TIN),FOREIGN KEY (PV) REFERENCES solar_panel(PV));
+
+CREATE TABLE purchased_by (u_buildno INT,PV VARCHAR(25), PRIMARY KEY(u_buildno,PV),FOREIGN KEY (u_buildno) REFERENCES users(u_buildno),FOREIGN KEY (PV) REFERENCES solar_panel(PV));
+desc purchased_by;
+
+CREATE TABLE installation (PV VARCHAR(25),u_buildno INT, d_TIN INT, PRIMARY KEY(PV,u_buildno,d_TIN), FOREIGN KEY
+ (PV) REFERENCES solar_panel(PV),FOREIGN KEY (u_buildno) REFERENCES users(u_buildno), FOREIGN KEY (d_TIN) REFERENCES distributor(d_TIN));
+ 
+ alter table installation ADD (ins_charge INT,ins_type VARCHAR(25),ins_date DATE);
+ 
+ desc installation;
+ 
+  insert into solar_panel values('PV_1',2,4000,3,'monocystalline');
+   insert into solar_panel values('PV_2',1,2000,4,'monocystalline');
+    insert into solar_panel values('PV_3',3,8000,1,'polycystalline');
+    insert into solar_panel values('PV_4',5,9000,4,'polycystalline');
+     insert into solar_panel values('PV_5',5,12000,7,'polycystalline');
+select * from solar_panel;
+
+ insert into distributor values(01,'shubham','Bangalore','shubham@gmail.com');
+  insert into distributor values(02,'ansh','Bangalore','ansh@gmail.com');
+   insert into distributor values(03,'Mohan','Mangalore','Mohan@gmail.com');
+    insert into distributor values(04,'pulkt','Mangalore','pulkit@gmail.com');
+    
+    insert into distributor values(05,'anshul','Mysore','anshul@gmail.com');
+    
+    select * from distributor;
+    
+     insert into users values(001,'User_1','Kengeri');
+     insert into users values(002,'User_2','Kengeri');
+      insert into users values(003,'User_3','Kormangala');
+       insert into users values(004,'User_4','RRnagar');
+       insert into users values(005,'User_5','MysoreRoad');
+       
+       select * from users;
+       
+        insert into sold_by values(1,'PV_1');
+        insert into sold_by values(2,'PV_2');
+         insert into sold_by values(3,'PV_3');
+         insert into sold_by values(4,'PV_4');
+         insert into sold_by values(5,'PV_5');
+         
+          select * from sold_by;
+          
+          update users set u_buildno=11 where u_buildno=1;
+          update users set u_buildno=12 where u_buildno=2;
+           update users set u_buildno=13 where u_buildno=3;
+            update users set u_buildno=14 where u_buildno=4;
+            update users set u_buildno=15 where u_buildno=5;
+            
+            select * from users;
+            
+             insert into purchased_by values(11,'PV_1');
+              insert into purchased_by values(12,'PV_2');
+              insert into purchased_by values(13,'PV_3');
+               insert into purchased_by values(14,'PV_4');
+                insert into purchased_by values(15,'PV_5');
+                
+                 insert into installation values("PV_1",11,1,40000,"commercial","2020-10-01");
+                 insert into installation values("PV_2",12,2,50000,"non-commercial","2021-1-02");
+                 insert into installation values("PV_3",13,3,50000,"non-commercial","2021-1-22");
+                  insert into installation values("PV_4",14,4,60000,"commercial","2021-6-29");
+                  insert into installation values("PV_5",15,5,70000,"commercial","2019-12-12");
+
+
+
+
+1st
+select d.d_name,count(d.d_TIN) from distributor d,installation i where i.d_TIN=d.d_TIN and i.ins_type="non-commercial" group by d.d_TIN having count(d.d_TIN)>=1; 
+
+2nd
+----
+select u.u_buildno,u.u_area,s.capacity from users u,installation i,solar_panel s where u.u_buildno=i.u_buildno and s.PV=i.PV and s.capacity=(select max(capacity)from solar_panel);
+
+3rd
+----
+select u.u_buildno,u.u_area,s.type   from users u,installation i,solar_panel s where s.PV=i.PV and  u.u_buildno=i.u_buildno and s.type="monocystalline";
+
+
+4th
+----
+select u.u_area, sum(i.ins_charge) as 'Total installation cost' from users u, installation i,solar_panel s
+where u.u_buildno=i.u_buildno and s.pv=i.pv and s.type="polycystalline" and exists(select u.u_area from
+users u,installation i,solar_panel s where u.u_buildno=i.u_buildno and s.pv=i.pv and
+s.type="monocystalline") group by u.u_area;
+
+5th
+----
+select d.*,s.*,i.ins_date from distributor d,solar_panel s,installation i where d.d_TIN = i.d_TIN and s.PV=i.PV and i.ins_date in (select min(ins_date) from installation);
+
+
+6th
+----
+select d.type,avg(d.ins_charge) from (select i.*,s.capacity,u.u_area,s.type from installation i inner join solar_panel s on i.PV=s.PV inner join users u on u.u_buildno=i.u_buildno where i.ins_type="commercial")as d group by d.type;

@@ -1,0 +1,90 @@
+// create db
+use rvce;
+
+// to check db
+show dbs;
+db.dropDatabase()
+
+1)     Insert minimum 5 employee records.
+-----------------------------------------
+// insert records for emp table
+db.emp.insert({_eid : "e1001" , ename:"shubhan" , socialno : "S1001" ,addr1 : "knp" , esal : 30000 ,  gender : "M" , emp_exp : 10})
+db.emp.insert({_eid : "e1002" , ename:"tahseen" , socialno : "S1002" ,addr1 : "Jpr" , esal : 40000 ,  gender : "M" , emp_exp : 4 }) 
+db.emp.insert({_eid : "e1003" , ename:"ansh" , socialno : "S1003" ,addr1 : "Pry" , esal : 10000 ,  gender : "M" , emp_exp : 6}) 
+db.emp.insert({_eid : "e1004" , ename:"esha" , socialno : "S1004" ,addr1 : "Pry" , esal : 15000 ,  gender : "F" , emp_exp : 15 })
+db.emp.insert({_eid : "e1005" , ename:"neha" , socialno : "S1005" ,addr1 : "Blr" , esal : 25000 ,  gender : "F" , emp_exp : 17 })
+db.emp.insert({_eid : "e1006" , ename:"suraj" , socialno : "S1006" ,addr1 : "Mum" , esal :35000 ,  gender : "M" , emp_exp : 13 })
+db.emp.insert({_eid : "e1007" , ename:"deepak" , socialno : "S1007" ,addr1 : "Knp" , esal :45000 ,  gender : "M" , emp_exp : 14})
+db.emp.find().forEach(printjson) 
+
+// insert records for dept table
+db.dept.insert({_dno : "d101" , dname:"IT" , mgid : db.emp.find()[0]._eid , mg_start_date : 2005})
+db.dept.insert({_dno : "d102" , dname:"Manager" , mgid : db.emp.find()[1]._eid , mg_start_date : 2010})
+db.dept.insert({_dno : "d103" , dname:"Testing" , mgid : db.emp.find()[2]._eid , mg_start_date : 2015})
+db.dept.insert({_dno : "d104" , dname:"IT" , mgid : db.emp.find()[3]._eid , mg_start_date : 2016})
+db.dept.insert({_dno : "d105" , dname:"Testing" , mgid : db.emp.find()[4]._eid , mg_start_date : 2018})
+db.dept.insert({_dno : "d106" , dname:"finance" , mgid : db.emp.find()[5]._eid , mg_start_date : 2019})
+db.dept.insert({_dno : "d107" , dname:"finance" , mgid : db.emp.find()[6]._eid , mg_start_date : 2020})
+db.dept.find().forEach(printjson) 
+
+// insert records for project table
+db.proj.insert({_pid : "p101" , pname:"retail" , ploc : "Blr" , dno : db.dept.find()[0]._dno})
+db.proj.insert({_pid : "p102" , pname:"health" , ploc : "Mum" , dno : db.dept.find()[1]._dno})
+db.proj.insert({_pid : "p103" , pname:"govt" , ploc : "Blr" , dno : db.dept.find()[2]._dno})
+db.proj.insert({_pid : "p104" , pname:"private" , ploc : "Pune" , dno : db.dept.find()[3]._dno})
+db.proj.insert({_pid : "p105" , pname:"govt" , ploc : "Hyd" , dno : db.dept.find()[4]._dno})
+db.proj.insert({_pid : "p106" , pname:"private" , ploc : "Hyd" , dno : db.dept.find()[5]._dno})
+db.proj.insert({_pid : "p107" , pname:"retail" , ploc : "Hyd" , dno : db.dept.find()[6]._dno})
+db.dept.find().forEach(printjson) 
+
+
+// insert records for workson table
+db.workson.insert({eid : db.emp.find()[0]._eid , pid : db.proj.find()[0]._pid })
+db.workson.insert({eid : db.emp.find()[1]._eid , pid : db.proj.find()[1]._pid })
+db.workson.insert({eid : db.emp.find()[2]._eid , pid : db.proj.find()[2]._pid })
+db.workson.insert({eid : db.emp.find()[3]._eid , pid : db.proj.find()[3]._pid })
+db.workson.insert({eid : db.emp.find()[4]._eid , pid : db.proj.find()[4]._pid })
+db.workson.insert({eid : db.emp.find()[5]._eid , pid : db.proj.find()[5]._pid })
+db.workson.insert({eid : db.emp.find()[6]._eid , pid : db.proj.find()[6]._pid })
+db.workson.insert({eid : db.emp.find()[6]._eid , pid : db.proj.find()[5]._pid })
+db.workson.insert({eid : db.emp.find()[6]._eid , pid : db.proj.find()[4]._pid })
+db.workson.find().forEach(printjson) 
+
+
+// display record
+db.emp.find().pretty() 
+
+
+2)     Sort the employee list by SSN
+-------------------------------------
+// ascending order
+db.emp.find().sort({socialno:-1}) 
+
+// descending order
+db.emp.find().sort({socialno:-1}) 
+
+3)     List the employees who are working in the finance department
+-------------------------------------------------------------------
+db.dept.aggregate({ $match : { dname:"finance" }});
+
+4)     Find the employee who draws the maximum salary.
+------------------------------------------------------
+// to get highest salary
+db.emp.find({}).sort({"esal":-1}).limit(1)
+
+// second highest salary
+db.emp.find({}).sort({"esal":-1}).skip(1).limit(1)
+
+5)     Update the record of the employee who has worked on maximum projects as “employee of the year”
+-----------------------------------------------------------------------------------------------------
+db.workson.aggregate([
+{ $group : {eid:"$eid"}},
+{ $count : "eid"}
+])
+
+6)     Delete employee records who have minimum experience
+----------------------------------------------------------
+db.emp.find().sort({emp_exp:1}).limit(1)
+
+
+

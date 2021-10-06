@@ -1,0 +1,16 @@
+select p.* from patient p ,doctor d,checks c where p.p_ssn=c.p_ssn and d.d_ssn=c.d_ssn 
+and p.age=40 and d.speciality="Nerologists";
+
+
+select D.*,count(P.D_ssn) from Doctor D,Prescribe P where D.D_ssn=P.D_ssn and 
+year(P.prescribe_date)="2013" group by P.D_ssn having count(P.D_ssn)>=2;
+
+select *from doctor where experience in (select max(experience)from doctor);
+
+select distinct d.* from drug d,pharmacy p,sold_by s where p.p_name=s.p_name and 
+s.trade_name=d.trade_name;
+
+select d.*,count(pc_name) from drug d group by pc_name having count(pc_name);
+
+select distinct d.* from drug d,pharmacy p,sold_by s where p.p_name=s.p_name and 
+s.trade_name=d.trade_name;

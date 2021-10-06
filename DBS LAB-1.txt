@@ -1,0 +1,263 @@
+create database musician;
+ use musician;
+
+
+create table musician(
+	ssn varchar(10) primary key,
+    name varchar(10),
+    contact varchar(10),
+    house_no int,
+    street_name varchar(10),
+    city varchar(10),
+    state varchar(10));
+
+
+create table instrument(
+	inst_id varchar(10) primary key,
+	name varchar(10),
+	key_node varchar(10));
+
+
+create table album(
+	album_id varchar(10) primary key,
+    	title varchar(10),
+    	copyright_date date,
+    	format varchar(10),
+    	no_of_songs int,
+    	ssn varchar(10),
+    	foreign key(ssn) references musician(ssn));
+
+
+create table song(
+     song_id varchar(10) primary key,
+    title varchar(10),
+    author varchar(10),
+    album_id varchar(10),
+    foreign key(album_id) references album(album_id));
+
+ create table play(
+    ssn varchar(10),
+    inst_id varchar(10),
+    foreign key(ssn) references musician(ssn),
+    foreign key(inst_id) references instrument(inst_id));
+
+
+create table perform(
+    ssn varchar(10),
+    song_id varchar(10),
+    foreign key(ssn) references musician(ssn),
+    foreign key(song_id) references song(song_id));
+
+
+insert into musician values("01","Vatsal","123456789",401,"Cmmercial","Bangalore","Karnataka");
+
+
+insert into musician values("02","Mahesh","234567891",316,"Sampige","Bangalore","Karnataka");
+
+
+insert into musician values("03","Ali","345678912",203,"Commitee","Bangalore","Karnataka");
+
+
+insert into musician values("04","Asagar","456789123",508,"Nandihill","Bangalore","Karnataka");
+
+
+insert into musician values("05","Akash","567891234",508,"Bhanghar","Bangalore","Karnataka");
+
+
+insert into instrument values("211","Tabla","A");
+
+
+insert into instrument values("212","Sitar","B");
+
+insert into instrument values("213","Flute","A");
+
+
+insert into instrument values("214","Piano","B");
+
+
+insert into instrument values("215","Guitar","A");
+
+insert into album values("301","Electronic","2007-06-10","mp3",5,"01");
+
+
+insert into album values("302","Jazz","2005-07-23","mp3",5,"02");
+
+
+insert into album values("303","Classical","2014-11-23","mp3",9,"02");
+
+
+insert into album values("304","Devotional","2016-02-17","mp3",4,"03");
+
+
+insert into album values("305","Electronic","2020-10-21","mp3",11,"04");
+
+
+insert into album values("306","Rap","2021-11-22","mp3",8,"05");
+
+insert into song values("401","Alladin","Djsnake","301");
+
+
+insert into song values("402","One","Chainsmk","302");
+
+insert into song values("403","Dream","Babal","303");
+
+insert into song values("404","Gabru","Yoyo","304");
+
+insert into song values("405","Bawla","Badshsh","305");
+
+insert into play values("01","211");
+
+Insert into play values("02","212");
+
+insert into play values("03","213");
+
+insert into play values("04","214");
+
+insert into play values("05","215");
+
+insert into perform values("01","401");
+
+insert into perform values("02","402");
+
+insert into perform values("03","403");
+
+insert into perform values("04","404");
+
+insert into perform values("05","405");
+
+
+mysql> show tables;
++--------------------+
+| Tables_in_musician |
++--------------------+
+| album              |
+| instrument         |
+| musician           |
+| perform            |
+| play               |
+| song               |
++--------------------+
+6 rows in set (0.02 sec)
+
+mysql> select * from album;
++----------+------------+----------------+--------+-------------+------+
+| album_id | title      | copyright_date | format | no_of_songs | ssn  |
++----------+------------+----------------+--------+-------------+------+
+| 301      | Electronic | 2007-06-10     | mp3    |           5 | 01   |
+| 302      | Jazz       | 2005-07-23     | mp3    |           5 | 02   |
+| 303      | Classical  | 2014-11-23     | mp3    |           9 | 02   |
+| 304      | Devotional | 2016-02-17     | mp3    |           4 | 03   |
+| 305      | Electronic | 2020-10-21     | mp3    |          11 | 04   |
+| 306      | Rap        | 2021-11-22     | mp3    |           8 | 05   |
++----------+------------+----------------+--------+-------------+------+
+6 rows in set (0.01 sec)
+
+mysql> select * from instrument;
++---------+--------+----------+
+| inst_id | name   | key_node |
++---------+--------+----------+
+| 211     | Tabla  | A        |
+| 212     | Sitar  | B        |
+| 213     | Flute  | A        |
+| 214     | Piano  | B        |
+| 215     | Guitar | A        |
++---------+--------+----------+
+5 rows in set (0.01 sec)
+
+mysql> select * from musician;
++-----+--------+-----------+----------+-------------+-----------+-----------+
+| ssn | name   | contact   | house_no | street_name | city      | state     |
++-----+--------+-----------+----------+-------------+-----------+-----------+
+| 01  | Vatsal | 123456789 |      401 | Cmmercial   | Bangalore | Karnataka |
+| 02  | Mahesh | 234567891 |      316 | Sampige     | Bangalore | Karnataka |
+| 03  | Ali    | 345678912 |      203 | Commitee    | Bangalore | Karnataka |
+| 04  | Asagar | 456789123 |      508 | Nandihill   | Bangalore | Karnataka |
+| 05  | Akash  | 567891234 |      508 | Bhanghar    | Bangalore | Karnataka |
++-----+--------+-----------+----------+-------------+-----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from perform;
++------+---------+
+| ssn  | song_id |
++------+---------+
+| 01   | 401     |
+| 02   | 402     |
+| 03   | 403     |
+| 04   | 404     |
+| 05   | 405     |
++------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select * from play;
++------+---------+
+| ssn  | inst_id |
++------+---------+
+| 01   | 211     |
+| 02   | 212     |
+| 03   | 213     |
+| 04   | 214     |
+| 05   | 215     |
++------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select * from song;
++---------+---------+----------+----------+
+| song_id | title   | author   | album_id |
++---------+---------+----------+----------+
+| 401     | Alladin | Djsnake  | 301      |
+| 402     | One     | Chainsmk | 302      |
+| 403     | Dream   | Babal    | 303      |
+| 404     | Gabru   | Yoyo     | 304      |
+| 405     | Bawla   | Badshsh  | 305      |
++---------+---------+----------+----------+
+
+
+
+
+
+
+mysql> select m.name as Musician_Name,s.title as Song_title,a.title as Album_Name from musician M,song S,album
+    -> A,perform P where M.ssn=P.ssn and P.song_id=S.song_id and S.album_id=A.album_id;
++---------------+------------+------------+
+| Musician_Name | Song_title | Album_Name |
++---------------+------------+------------+
+| Vatsal        | Alladin    | Electronic |
+| Mahesh        | One        | Jazz       |
+| Ali           | Dream      | Classical  |
+| Asagar        | Gabru      | Devotional |
+| Akash         | Bawla      | Electronic |
++---------------+------------+------------+
+5 rows in set (0.00 sec)
+
+select m.ssn,m.name from musician m where m.ssn not in (select ssn from album);
+
+
+select s.*,count(s.song_id) as No_of_musicians_perform from song s, perform p where s.song_id=p.song_id
+   group by p.song_id having count(p.song_id)>=3;
+
+
+select I.name,count(I.inst_id),count(I.inst_id)/(select count(*) from musician) as average from instrument
+I,play P where I.inst_id=P.inst_id group by I.inst_id;
++--------+------------------+---------+
+| name   | count(I.inst_id) | average |
++--------+------------------+---------+
+| Tabla  |                1 |  0.2000 |
+| Sitar  |                1 |  0.2000 |
+| Flute  |                1 |  0.2000 |
+| Piano  |                1 |  0.2000 |
+| Guitar |                1 |  0.2000 |
++--------+------------------+---------+
+5 rows in set (0.01 sec)
+
+select distinct(a.title) from album a, instrument i, play p where p.inst_id=i.inst_id and a.ssn=p.ssn and p.ssn in
+	(select ssn from album where no_of_songs >(select avg(no_of_songs) from album)) and i.name in
+	('flute','guitar') ;
++-------+
+| title |
++-------+
+| Rap   |
++-------+
+1 row in set (0.01 sec)
+
+select m.* from musician m where ssn in(select ssn from play group by ssn having count(ssn)=(select count(*) from instrument));
+Empty set (0.01 sec)

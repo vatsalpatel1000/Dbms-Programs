@@ -1,0 +1,1292 @@
+Enter password: *****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.25 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| assignment         |
+| exercise1          |
+| information_schema |
+| jdbcdb             |
+| lab2               |
+| lab3               |
+| lab4               |
+| mohan              |
+| mysql              |
+| performance_schema |
+| sakila             |
+| solar_panel        |
+| sys                |
+| test               |
+| today              |
+| world              |
++--------------------+
+16 rows in set (0.03 sec)
+
+mysql> use assignment;
+Database changed
+mysql> show tables;
++----------------------+
+| Tables_in_assignment |
++----------------------+
+| empdet               |
+| empsal               |
+| student              |
++----------------------+
+3 rows in set (0.02 sec)
+
+mysql> select * from student;
++----------+-------+
+| SUB_CODE | MARKS |
++----------+-------+
+| MCA001   |    80 |
+| MCA002   |   100 |
+| MCA004   |    95 |
+| MCA003   |    70 |
++----------+-------+
+4 rows in set (0.01 sec)
+
+mysql> desc student;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| SUB_CODE | varchar(20) | YES  |     | NULL    |       |
+| MARKS    | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> ALTER table student ADD PRIMARY KEY (SUB_CODE);
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc student;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| SUB_CODE | varchar(20) | NO   | PRI | NULL    |       |
+| MARKS    | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> desc student;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| SUB_CODE | varchar(20) | NO   | PRI | NULL    |       |
+| MARKS    | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc student;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| SUB_CODE | varchar(20) | NO   | PRI | NULL    |       |
+| MARKS    | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc student;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| SUB_CODE | varchar(20) | NO   | PRI | NULL    |       |
+| MARKS    | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select count(EMP_ID), FULL_NAME from empdet group by fullname having count(EMP_ID)>0;
+ERROR 1054 (42S22): Unknown column 'fullname' in 'group statement'
+mysql> select count(EMP_ID), FULL_NAME from empdet group by FULL_NAME having count(EMP_ID)>0;
++---------------+-----------+
+| count(EMP_ID) | FULL_NAME |
++---------------+-----------+
+|             1 | ROY       |
+|             1 | MOHAN     |
+|             1 | SUNIL     |
+|             1 | SHUBHAM   |
+|             1 | KUMAR     |
++---------------+-----------+
+5 rows in set (0.01 sec)
+
+mysql> select e.FULL_NAME,s.SALARY FROM empdet e, empsal s where e.EMP_ID=s.EMP_ID;
++-----------+--------+
+| FULL_NAME | SALARY |
++-----------+--------+
+| ROY       | 350000 |
+| MOHAN     | 500000 |
+| SUNIL     |  54000 |
+| SHUBHAM   |  80000 |
+| KUMAR     |  34000 |
++-----------+--------+
+5 rows in set (0.01 sec)
+
+mysql> select * from empdet where EMP_ID not in (select EMP_ID from empsal);
+Empty set (0.04 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_assignment |
++----------------------+
+| empdet               |
+| empsal               |
+| student              |
++----------------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from empsal;
++--------+------------+--------+
+| EMP_ID | PROJECT    | SALARY |
++--------+------------+--------+
+| EMP001 | BIG DATA   | 350000 |
+| EMP002 | WEB DEV    | 500000 |
+| EMP003 | MERN       |  54000 |
+| EMP004 | DEEP LEARN |  80000 |
+| EMP005 | OPERATOR   |  34000 |
++--------+------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> delete from empsal where EMP_ID="EMP005";
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from empdet where EMP_ID not in (select EMP_ID from empsal);
++--------+-----------+------------+------------+--------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOB        | CITY   |
++--------+-----------+------------+------------+--------+
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU |
++--------+-----------+------------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE "empdet" change "DOB" "DOJ"[date];
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"empdet" change "DOB" "DOJ"[date]' at line 1
+mysql> ALTER TABLE "empdet" Change "DOB" "DOJ"[date];
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"empdet" Change "DOB" "DOJ"[date]' at line 1
+mysql> ALTER TABLE empdet RENAME COLUMN BOB TP DOJ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TP DOJ' at line 1
+mysql> alter table empdet modify(DOB date) (DOJ date);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(DOB date) (DOJ date)' at line 1
+mysql> desc empdet;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| EMP_ID     | varchar(20) | NO   | PRI | NULL    |       |
+| FULL_NAME  | varchar(20) | YES  |     | NULL    |       |
+| MANAGER_ID | varchar(20) | YES  |     | NULL    |       |
+| DOB        | date        | YES  |     | NULL    |       |
+| CITY       | varchar(20) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+5 rows in set (0.02 sec)
+
+mysql> ALTER TABLE empdet RENAME COLUMN DOB TO DOJ;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from empdet where DOJ like "2020-__-__";
+Empty set (0.01 sec)
+
+mysql> select * form empdet;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'form empdet' at line 1
+mysql> select * from empdet;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
++--------+-----------+------------+------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO empdet values("EMP006","ROHAN","MNG106",2020-09-13,"YAGIR");
+ERROR 1292 (22007): Incorrect date value: '1998' for column 'DOJ' at row 1
+mysql> INSERT INTO empdet values("EMP006","ROHAN","MNG106","2020-09-13","YAGIR");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from empdet where DOJ like "2020-__-__";
++--------+-----------+------------+------------+-------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY  |
++--------+-----------+------------+------------+-------+
+| EMP006 | ROHAN     | MNG106     | 2020-09-13 | YAGIR |
++--------+-----------+------------+------------+-------+
+1 row in set (0.01 sec)
+
+mysql> select e.*,s.* from empsal e,empdet s, where e.EMP_ID = s.EMP_ID and SALARY is not null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where e.EMP_ID = s.EMP_ID and SALARY is not null' at line 1
+mysql> select e.*,s.* from empsal e,empdet s where e.EMP_ID = s.EMP_ID and SALARY is not null;
++--------+------------+--------+--------+-----------+------------+------------+-----------+
+| EMP_ID | PROJECT    | SALARY | EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+------------+--------+--------+-----------+------------+------------+-----------+
+| EMP001 | BIG DATA   | 350000 | EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | WEB DEV    | 500000 | EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | MERN       |  54000 | EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | DEEP LEARN |  80000 | EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
++--------+------------+--------+--------+-----------+------------+------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select project,count(*) from empsal group by project;
++------------+----------+
+| project    | count(*) |
++------------+----------+
+| BIG DATA   |        1 |
+| WEB DEV    |        1 |
+| MERN       |        1 |
+| DEEP LEARN |        1 |
++------------+----------+
+4 rows in set (0.01 sec)
+
+mysql> select * from empsal;
++--------+------------+--------+
+| EMP_ID | PROJECT    | SALARY |
++--------+------------+--------+
+| EMP001 | BIG DATA   | 350000 |
+| EMP002 | WEB DEV    | 500000 |
+| EMP003 | MERN       |  54000 |
+| EMP004 | DEEP LEARN |  80000 |
++--------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select e.FULL_NAME, s.SALARY from empdet e left join empsal s on e.EMP_ID = s.EMP_ID;
++-----------+--------+
+| FULL_NAME | SALARY |
++-----------+--------+
+| ROY       | 350000 |
+| MOHAN     | 500000 |
+| SUNIL     |  54000 |
+| SHUBHAM   |  80000 |
+| KUMAR     |   NULL |
+| ROHAN     |   NULL |
++-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP006 | ROHAN     | MNG106     | 2020-09-13 | YAGIR     |
++--------+-----------+------------+------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM empsal;
++--------+------------+--------+
+| EMP_ID | PROJECT    | SALARY |
++--------+------------+--------+
+| EMP001 | BIG DATA   | 350000 |
+| EMP002 | WEB DEV    | 500000 |
+| EMP003 | MERN       |  54000 |
+| EMP004 | DEEP LEARN |  80000 |
++--------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select distinct e.FULL_NAME FROM empdet e inner join empdet m on e.EMP_ID= m.MANAGER_ID;
+Empty set (0.00 sec)
+
+mysql> insert into empdet values("EMP006","ROHAN","EMP002",
+    -> "2020-09-13","YAGIR");
+ERROR 1062 (23000): Duplicate entry 'EMP006' for key 'empdet.PRIMARY'
+mysql> insert into empdet values("EMP007","MOHIT","EMP002","1999-09-01","Delhi");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select distinct e.FULL_NAME FROM empdet e inner join empdet m on e.EMP_ID= m.MANAGER_ID;
++-----------+
+| FULL_NAME |
++-----------+
+| MOHAN     |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) >1;
+Empty set (0.00 sec)
+
+mysql> ALTER TABLE empdet SET CITY="RAICHUR" WHERE EMP_ID="EMP006";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SET CITY="RAICHUR" WHERE EMP_ID="EMP006"' at line 1
+mysql> UPDATE TABLE empdet SET CITY="RAICHUR" WHERE EMP_ID="EMP006";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABLE empdet SET CITY="RAICHUR" WHERE EMP_ID="EMP006"' at line 1
+mysql> UPDATE  empdet SET CITY="RAICHUR" WHERE EMP_ID="EMP006";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) >1;
+Empty set (0.03 sec)
+
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP006 | ROHAN     | MNG106     | 2020-09-13 | RAICHUR   |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
++--------+-----------+------------+------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> UPDATE  empdet SET FULL_NAME="SUNIL" WHERE EMP_ID="EMP006";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) >1;
+Empty set (0.00 sec)
+
+mysql> UPDATE  empdet SET MANAGER_ID="EMP103" WHERE EMP_ID="EMP006";
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) >1;
+Empty set (0.01 sec)
+
+mysql> UPDATE  empdet SET DOJ="2002-08-21" WHERE EMP_ID="EMP006";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) >1;
+Empty set (0.00 sec)
+
+mysql> UPDATE  empdet SET EMP_ID="EMP103" WHERE EMP_ID="EMP006";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) >1;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
+| EMP103 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
++--------+-----------+------------+------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) > 1;
+Empty set (0.00 sec)
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) > 1;
+Empty set (0.00 sec)
+
+mysql> UPDATE  empdet SET EMP_ID="EMP003" WHERE EMP_ID="EMP006";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) > 1;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
+| EMP103 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
++--------+-----------+------------+------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> UPDATE  empdet SET EMP_ID="EMP006" WHERE EMP_ID="EMP103";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
++--------+-----------+------------+------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> UPDATE  empdet SET EMP_ID="EMP003" WHERE EMP_ID="EMP006";
+ERROR 1062 (23000): Duplicate entry 'EMP003' for key 'empdet.PRIMARY'
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) > 1;
+Empty set (0.00 sec)
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*);
++-----------+------------+------------+-----------+----------+
+| FULL_NAME | MANAGER_ID | DOJ        | CITY      | count(*) |
++-----------+------------+------------+-----------+----------+
+| ROY       | MNG101     | 1999-02-21 | BANGALORE |        1 |
+| MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |        1 |
+| SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |        1 |
+| SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |        1 |
+| KUMAR     | MNG105     | 1992-03-04 | MYSURU    |        1 |
+| SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |        1 |
+| MOHIT     | EMP002     | 1999-09-01 | Delhi     |        1 |
++-----------+------------+------------+-----------+----------+
+7 rows in set (0.00 sec)
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, count(*) from empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY having count(*) > 1;
+Empty set (0.00 sec)
+
+mysql> select * from empdet where EMP_ID="EMP006";
++--------+-----------+------------+------------+---------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY    |
++--------+-----------+------------+------------+---------+
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR |
++--------+-----------+------------+------------+---------+
+1 row in set (0.00 sec)
+
+mysql> select o.EMP_ID, o.FULL_NAME, o.MANAGER_ID, o.DOJ,o.CITY from (select *, Row_Number() OVER(ORDER BY FULL_NAME) AS RowNumber from empdet)o WHERE o.RowNumber%2<>0;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
++--------+-----------+------------+------------+-----------+
+4 rows in set (0.01 sec)
+
+mysql> select * from empsal e1 where 2 =(select count(distinct (e2.SALARY))from empsal e2 where e2.SALARY > e1.SALARY);
++--------+------------+--------+
+| EMP_ID | PROJECT    | SALARY |
++--------+------------+--------+
+| EMP004 | DEEP LEARN |  80000 |
++--------+------------+--------+
+1 row in set (0.02 sec)
+
+mysql> SELECT * FROM empdet where MANAGER_ID="MNG101";
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
++--------+-----------+------------+------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM empdet where MANAGER_ID="MNG102";
++--------+-----------+------------+------------+----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY     |
++--------+-----------+------------+------------+----------+
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA |
++--------+-----------+------------+------------+----------+
+1 row in set (0.00 sec)
+
+mysql> select distinct project from empsal;
++------------+
+| project    |
++------------+
+| BIG DATA   |
+| WEB DEV    |
+| MERN       |
+| DEEP LEARN |
++------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from empsal
+    -> ;
++--------+------------+--------+
+| EMP_ID | PROJECT    | SALARY |
++--------+------------+--------+
+| EMP001 | BIG DATA   | 350000 |
+| EMP002 | WEB DEV    | 500000 |
+| EMP003 | MERN       |  54000 |
+| EMP004 | DEEP LEARN |  80000 |
++--------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> insert into empsal values("EMP005","P1",95000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into empsal values("EMP006","P2",8=95000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select count(EMP_ID) as COUNT_PROJECT from empsal where PROJECT="P1";
++---------------+
+| COUNT_PROJECT |
++---------------+
+|             1 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> insert into empsal values("EMP007","P1",8=95000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select count(EMP_ID) as COUNT_PROJECT from empsal where PROJECT="P1";
++---------------+
+| COUNT_PROJECT |
++---------------+
+|             2 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select max(SALARY) as MAX_SALARY , min(SALARY) AS MIN_SALARY as AVG_SALARY FROM empsal;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'as AVG_SALARY FROM empsal' at line 1
+mysql> select max(SALARY) as MAX_SALARY , min(SALARY) AS MIN_SALARY, AVG_SALARY FROM empsal;
+ERROR 1054 (42S22): Unknown column 'AVG_SALARY' in 'field list'
+mysql> select max(SALARY) as MAX_SALARY , min(SALARY) AS MIN_SALARY, avg(SALARY) AS AVG_SALARY FROM empsal;
++------------+------------+-------------+
+| MAX_SALARY | MIN_SALARY | AVG_SALARY  |
++------------+------------+-------------+
+|     500000 |          0 | 154142.8571 |
++------------+------------+-------------+
+1 row in set (0.01 sec)
+
+mysql> UPDATE empsal set SALARY = 9200 WHERE EMP_ID="EMP003";
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE empsal set SALARY = 22000 WHERE EMP_ID="EMP004";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM empsal WHERE SALARY BETWEEN 9000 AND 25000;
++--------+------------+--------+
+| EMP_ID | PROJECT    | SALARY |
++--------+------------+--------+
+| EMP003 | MERN       |   9200 |
+| EMP004 | DEEP LEARN |  22000 |
++--------+------------+--------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT * FROM empdel;
+ERROR 1146 (42S02): Table 'assignment.empdel' doesn't exist
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
++--------+-----------+------------+------------+-----------+
+7 rows in set (0.01 sec)
+
+mysql> select * from emdel where CITY="GULBARGA" AND MANAGER_ID="MNG102";
+ERROR 1146 (42S02): Table 'assignment.emdel' doesn't exist
+mysql> select * from emPdel where CITY="GULBARGA" AND MANAGER_ID="MNG102";
+ERROR 1146 (42S02): Table 'assignment.empdel' doesn't exist
+mysql> select * from empdel where CITY="GULBARGA" AND MANAGER_ID="MNG102";
+ERROR 1146 (42S02): Table 'assignment.empdel' doesn't exist
+mysql> select * from empdet where CITY="GULBARGA" AND MANAGER_ID="MNG102";
++--------+-----------+------------+------------+----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY     |
++--------+-----------+------------+------------+----------+
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA |
++--------+-----------+------------+------------+----------+
+1 row in set (0.00 sec)
+
+mysql> select (salary+2000) as TOTAL_SALARY FROM empsal;
++--------------+
+| TOTAL_SALARY |
++--------------+
+|       352000 |
+|       502000 |
+|        11200 |
+|        24000 |
+|        97000 |
+|         2000 |
+|         2000 |
++--------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from empdel where FULL_NAME like "__ha%";
+ERROR 1146 (42S02): Table 'assignment.empdel' doesn't exist
+mysql> select * from empdet where FULL_NAME like "__ha%";
++--------+-----------+------------+------------+----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY     |
++--------+-----------+------------+------------+----------+
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA |
++--------+-----------+------------+------------+----------+
+1 row in set (0.01 sec)
+
+mysql> select FULL_NAME, MANAGER_ID, DOJ, CITY, COUNT(*) FROM empdet group by FULL_NAME, MANAGER_ID, DOJ, CITY HAVING COUNT(*) >1;
+Empty set (0.00 sec)
+
+mysql> DELETE e1 from empdet e1 INNER JOIN empdet e2 where e1.EMP_ID > e2.EMP_ID and e1.FULL_NAME=e2.FULL_NAME AND e1.MANAGER_ID= e2.MANAGER_ID AND e1.DOJ=e2.DOJ AND e1.CITY=e2.CITY;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
++--------+-----------+------------+------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT * FROM empsal;
++--------+------------+--------+
+| EMP_ID | PROJECT    | SALARY |
++--------+------------+--------+
+| EMP001 | BIG DATA   | 350000 |
+| EMP002 | WEB DEV    | 500000 |
+| EMP003 | MERN       |   9200 |
+| EMP004 | DEEP LEARN |  22000 |
+| EMP005 | P1         |  95000 |
+| EMP006 | P2         |      0 |
+| EMP007 | P1         |      0 |
++--------+------------+--------+
+7 rows in set (0.00 sec)
+
+mysql> select o.EMP_ID, o.FULL_NAME, o.MANAGER_ID, o.DOJ,o.CITY from (select *, Row_Number() OVER(ORDER BY FULL_NAME) AS RowNumber from empdet)o WHERE o.RowNumber%2<>0;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
++--------+-----------+------------+------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select o.EMP_ID, o.FULL_NAME, o.MANAGER_ID, o.DOJ,o.CITY from (select *, Row_Number() OVER(ORDER BY FULL_NAME) AS RowNumber from empdet)o WHERE o.RowNumber%2=0;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
++--------+-----------+------------+------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select o.EMP_ID, o.FULL_NAME, o.MANAGER_ID, o.DOJ,o.CITY from (select *, Row_Number() OVER(ORDER BY FULL_NAME) AS RowNumber from empdet)o WHERE o.RowNumber%2!=0;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
++--------+-----------+------------+------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select o.EMP_ID, o.FULL_NAME, o.MANAGER_ID, o.DOJ,o.CITY from (select *, Row_Number() OVER(ORDER BY FULL_NAME) AS RowNumber from empdet)o WHERE o.RowNumber%2=1;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
++--------+-----------+------------+------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select o.EMP_ID, o.FULL_NAME, o.MANAGER_ID, o.DOJ,o.CITY from (select *, Row_Number() OVER(ORDER BY FULL_NAME) AS RowNumber from empdet)o WHERE o.RowNumber%2=0;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
++--------+-----------+------------+------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_assignment |
++----------------------+
+| empdet               |
+| empsal               |
+| student              |
++----------------------+
+3 rows in set (0.02 sec)
+
+mysql> create table copy select * from empdet;
+Query OK, 7 rows affected (0.07 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from copy;
++--------+-----------+------------+------------+-----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      |
++--------+-----------+------------+------------+-----------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |
++--------+-----------+------------+------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> create table copy select * from empsal where 1=0;
+ERROR 1050 (42S01): Table 'copy' already exists
+mysql> create table copied select * from empsal where 1=0;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from copied;
+Empty set (0.00 sec)
+
+mysql> desc copied;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| EMP_ID  | varchar(20) | NO   |     | NULL    |       |
+| PROJECT | varchar(10) | YES  |     | NULL    |       |
+| SALARY  | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> select substring(e.FULL_NAME,LENGTH(e.FULL_NAME)) AS MIDDLE_LETTER FROM empdet e;
++---------------+
+| MIDDLE_LETTER |
++---------------+
+| Y             |
+| N             |
+| L             |
+| M             |
+| R             |
+| L             |
+| T             |
++---------------+
+7 rows in set (0.01 sec)
+
+mysql> select '*' from dual union all select '**' from dual union all select '***' from dual union all select '****' from dual union all select '*****' from dual union all select '******' from dual;
++--------+
+| *      |
++--------+
+| *      |
+| **     |
+| ***    |
+| ****   |
+| *****  |
+| ****** |
++--------+
+6 rows in set (0.01 sec)
+
+mysql> select * from empdet,empsal;
++--------+-----------+------------+------------+-----------+--------+------------+--------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      | EMP_ID | PROJECT    | SALARY |
++--------+-----------+------------+------------+-----------+--------+------------+--------+
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | EMP001 | BIG DATA   | 350000 |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   | EMP001 | BIG DATA   | 350000 |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | EMP001 | BIG DATA   | 350000 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | EMP001 | BIG DATA   | 350000 |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | EMP001 | BIG DATA   | 350000 |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | EMP001 | BIG DATA   | 350000 |
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | EMP001 | BIG DATA   | 350000 |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | EMP002 | WEB DEV    | 500000 |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   | EMP002 | WEB DEV    | 500000 |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | EMP002 | WEB DEV    | 500000 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | EMP002 | WEB DEV    | 500000 |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | EMP002 | WEB DEV    | 500000 |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | EMP002 | WEB DEV    | 500000 |
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | EMP002 | WEB DEV    | 500000 |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | EMP003 | MERN       |   9200 |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   | EMP003 | MERN       |   9200 |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | EMP003 | MERN       |   9200 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | EMP003 | MERN       |   9200 |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | EMP003 | MERN       |   9200 |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | EMP003 | MERN       |   9200 |
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | EMP003 | MERN       |   9200 |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | EMP004 | DEEP LEARN |  22000 |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   | EMP004 | DEEP LEARN |  22000 |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | EMP004 | DEEP LEARN |  22000 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | EMP004 | DEEP LEARN |  22000 |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | EMP004 | DEEP LEARN |  22000 |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | EMP004 | DEEP LEARN |  22000 |
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | EMP004 | DEEP LEARN |  22000 |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | EMP005 | P1         |  95000 |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   | EMP005 | P1         |  95000 |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | EMP005 | P1         |  95000 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | EMP005 | P1         |  95000 |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | EMP005 | P1         |  95000 |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | EMP005 | P1         |  95000 |
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | EMP005 | P1         |  95000 |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | EMP006 | P2         |      0 |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   | EMP006 | P2         |      0 |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | EMP006 | P2         |      0 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | EMP006 | P2         |      0 |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | EMP006 | P2         |      0 |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | EMP006 | P2         |      0 |
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | EMP006 | P2         |      0 |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | EMP007 | P1         |      0 |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   | EMP007 | P1         |      0 |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | EMP007 | P1         |      0 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | EMP007 | P1         |      0 |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | EMP007 | P1         |      0 |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | EMP007 | P1         |      0 |
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | EMP007 | P1         |      0 |
++--------+-----------+------------+------------+-----------+--------+------------+--------+
+49 rows in set (0.01 sec)
+
+mysql> select * from
+ERROR 1054 (42S22): Unknown column 'e1.SALARY' in 'where clause'
+mysql> select * from empsal e1 where 1=(select count(distinct SALARY) from empsal e2 where e2.SALARY > e1.SALARY);
++--------+----------+--------+
+| EMP_ID | PROJECT  | SALARY |
++--------+----------+--------+
+| EMP001 | BIG DATA | 350000 |
++--------+----------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from empsal e1 where 1=(select count(distinct SALARY) from empsal e2 where e2.SALARY < e1.SALARY);
++--------+---------+--------+
+| EMP_ID | PROJECT | SALARY |
++--------+---------+--------+
+| EMP003 | MERN    |   9200 |
++--------+---------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from empsal where SALARY=(select SALARY as THIRD_HIGHEST from empsal e1 where 2=(select count(distinct (e2.salary)) from empsal e2 where e2.SALARY > e1.SALARY));
++--------+---------+--------+
+| EMP_ID | PROJECT | SALARY |
++--------+---------+--------+
+| EMP005 | P1      |  95000 |
++--------+---------+--------+
+1 row in set (0.00 sec)
+
+mysql> SELECT now();
++---------------------+
+| now()               |
++---------------------+
+| 2021-09-10 18:42:58 |
++---------------------+
+1 row in set (0.01 sec)
+
+mysql> select * from student where NAME LIKE '%A';
+ERROR 1054 (42S22): Unknown column 'NAME' in 'where clause'
+mysql> select * from student WHERE NAME LIKE 'A%';
+ERROR 1054 (42S22): Unknown column 'NAME' in 'where clause'
+mysql> select * from student;
++----------+-------+
+| SUB_CODE | MARKS |
++----------+-------+
+| MCA001   |    80 |
+| MCA002   |   100 |
+| MCA003   |    70 |
+| MCA004   |    95 |
++----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM empdet WHERE FULL_NAME LIKE "A%";
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM empdet WHERE FULL_NAME LIKE "M%";
++--------+-----------+------------+------------+----------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY     |
++--------+-----------+------------+------------+----------+
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi    |
++--------+-----------+------------+------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> ALTER table empdet ADD Email varchar(20) NOT NULL AFTER CITY;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update table empdet set Email="mohanpujari@gmail.com" WHERE EMP_ID="EMP002";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table empdet set Email="mohanpujari@gmail.com" WHERE EMP_ID="EMP002"' at line 1
+mysql> update  empdet set Email="mohanpujari@gmail.com" WHERE EMP_ID="EMP002";
+ERROR 1406 (22001): Data too long for column 'Email' at row 1
+mysql> ALTER TABLE empdet modify(Email varchar(20)) (Email varchar(50));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(Email varchar(20)) (Email varchar(50))' at line 1
+mysql> ALTER TABLE empdet modify Email in(50);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'in(50)' at line 1
+mysql> alter table empdet modify Email varchar(100);
+Query OK, 7 rows affected (0.10 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> update  empdet set Email="mohanpujari@gmail.com" WHERE EMP_ID="EMP002";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update  empdet set Email="roy@gmail.com" WHERE EMP_ID="EMP002";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update  empdet set Email="mohanpujari@gmail.com" WHERE EMP_ID="EMP002";
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update  empdet set Email="roy@gmail.com" WHERE EMP_ID="EMP001";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update  empdet set Email="sunil@" WHERE EMP_ID="EMP003";
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update  empdet set Email="sunil" WHERE EMP_ID="EMP003";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update  empdet set Email="shubham@gmail.com" WHERE EMP_ID="EMP004";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update  empdet set Email="kumar@gmail.com" WHERE EMP_ID="EMP005";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update  empdet set Email="mohit@gmail.com" WHERE EMP_ID="EMP006";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from empdet;
++--------+-----------+------------+------------+-----------+-----------------------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      | Email                 |
++--------+-----------+------------+------------+-----------+-----------------------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | roy@gmail.com         |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | mohanpujari@gmail.com |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | sunil                 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | shubham@gmail.com     |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | kumar@gmail.com       |
+| EMP006 | SUNIL     | EMP103     | 2002-08-21 | RAICHUR   | mohit@gmail.com       |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |                       |
++--------+-----------+------------+------------+-----------+-----------------------+
+7 rows in set (0.00 sec)
+
+mysql> delete from empdet where EMP_ID="EMP006";
+Query OK, 1 row affected (0.01 sec)
+
+mysql> update  empdet set Email="mohit@gmail.com" WHERE EMP_ID="EMP006";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select * from empdet;
++--------+-----------+------------+------------+-----------+-----------------------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      | Email                 |
++--------+-----------+------------+------------+-----------+-----------------------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | roy@gmail.com         |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | mohanpujari@gmail.com |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | sunil                 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | shubham@gmail.com     |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | kumar@gmail.com       |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     |                       |
++--------+-----------+------------+------------+-----------+-----------------------+
+6 rows in set (0.00 sec)
+
+mysql> update  empdet set Email="mohit@gmail.com" WHERE EMP_ID="EMP007";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from empdet;
++--------+-----------+------------+------------+-----------+-----------------------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      | Email                 |
++--------+-----------+------------+------------+-----------+-----------------------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | roy@gmail.com         |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | mohanpujari@gmail.com |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | sunil                 |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | shubham@gmail.com     |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | kumar@gmail.com       |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | mohit@gmail.com       |
++--------+-----------+------------+------------+-----------+-----------------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM empdet where `Email` NOT REGEXP '^[^@]+@[^@]+\.[^@]{2,}}$';
+ERROR 3688 (HY000): Syntax error in regular expression on line 1, character 22.
+mysql> SELECT * FROM empdet WHERE email NOT LIKE '%_@__%.__%'
+    -> ;
++--------+-----------+------------+------------+---------+-------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY    | Email |
++--------+-----------+------------+------------+---------+-------+
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR | sunil |
++--------+-----------+------------+------------+---------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM empdet WHERE email LIKE '%_@__%.__%'
+    -> ;
++--------+-----------+------------+------------+-----------+-----------------------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      | Email                 |
++--------+-----------+------------+------------+-----------+-----------------------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | roy@gmail.com         |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | mohanpujari@gmail.com |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | shubham@gmail.com     |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | kumar@gmail.com       |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | mohit@gmail.com       |
++--------+-----------+------------+------------+-----------+-----------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT e.FULL_NAME , s.SALARY*12 AS ANNUAL_SALARY FROM empdet e, SALARY s where e.EMP_ID=s.EMP_ID;
+ERROR 1146 (42S02): Table 'assignment.salary' doesn't exist
+mysql> SELECT * FROM empdet e.FULL_NAME , s.SALARY*12 AS ANNUAL_SALARY FROM empdet e, SALARY s where e.EMP_ID=s.EMP_ID;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.FULL_NAME , s.SALARY*12 AS ANNUAL_SALARY FROM empdet e, SALARY s where e.EMP_ID' at line 1
+mysql> SELECT e.FULL_NAME , s.SALARY*12 AS ANNUAL_SALARY FROM empdet e, empsal s where e.EMP_ID=s.EMP_ID;
++-----------+---------------+
+| FULL_NAME | ANNUAL_SALARY |
++-----------+---------------+
+| ROY       |       4200000 |
+| MOHAN     |       6000000 |
+| SUNIL     |        110400 |
+| SHUBHAM   |        264000 |
+| KUMAR     |       1140000 |
+| MOHIT     |             0 |
++-----------+---------------+
+6 rows in set (0.04 sec)
+
+mysql> ALTER TABEL empdet ADD DEPT_NO varchar(40),DESIGNATION varchar(40) NOT NULL AFTER Email;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABEL empdet ADD DEPT_NO varchar(40),DESIGNATION varchar(40) NOT NULL AFTER Emai' at line 1
+mysql> ALTER TABEL empdet ADD DEPT_NO varchar(40) NOT NULL AFTER Email;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABEL empdet ADD DEPT_NO varchar(40) NOT NULL AFTER Email' at line 1
+mysql> ALTER TABLE empdet ADD DEPT_NO varchar(40),DESIGNATION varchar(40) NOT NULL AFTER Email;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DESIGNATION varchar(40) NOT NULL AFTER Email' at line 1
+mysql> ALTER TABLE empdet ADD DEPT_NO varchar(40) NOT NULL AFTER Email;
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE empdet ADD DESIGNATION varchar(40) NOT NULL AFTER Email;
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+-----------------------+-------------+---------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      | Email                 | DESIGNATION | DEPT_NO |
++--------+-----------+------------+------------+-----------+-----------------------+-------------+---------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | roy@gmail.com         |             |         |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | mohanpujari@gmail.com |             |         |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | sunil                 |             |         |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | shubham@gmail.com     |             |         |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | kumar@gmail.com       |             |         |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | mohit@gmail.com       |             |         |
++--------+-----------+------------+------------+-----------+-----------------------+-------------+---------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO empdet(DEPT_NO,DESIGNATION) VALUES(10,"Manager");
+ERROR 1364 (HY000): Field 'EMP_ID' doesn't have a default value
+mysql> update empdet set DESIGNATION="Manager" WHERE FULL_NAME="ROY";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DESIGNATION="Manager" WHERE FULL_NAME="MOHAN";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DESIGNATION="Analyst" WHERE FULL_NAME="ROY";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DESIGNATION="CLerk" WHERE FULL_NAME="SUNIL";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DESIGNATION="Clerk" WHERE FULL_NAME="SUNIL";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DESIGNATION="Engineer" WHERE FULL_NAME="SHUBHAM";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DESIGNATION="Engineer" WHERE FULL_NAME="KUMAR";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DESIGNATION="Salesman" WHERE FULL_NAME="MOHIT";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DEPT_ID=10 WHERE EMP_ID="EMP001";
+ERROR 1054 (42S22): Unknown column 'DEPT_ID' in 'field list'
+mysql> update empdet set DEPT_NO=10 WHERE EMP_ID="EMP001";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DEPT_NO=20 WHERE EMP_ID="EMP002";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DEPT_NO=30 WHERE EMP_ID="EMP003";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DEPT_NO=40 WHERE EMP_ID="EMP004";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DEPT_NO=50 WHERE EMP_ID="EMP005";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update empdet set DEPT_NO=60 WHERE EMP_ID="EMP006";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+-----------------------+-------------+---------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      | Email                 | DESIGNATION | DEPT_NO |
++--------+-----------+------------+------------+-----------+-----------------------+-------------+---------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | roy@gmail.com         | Analyst     | 10      |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | mohanpujari@gmail.com | Manager     | 20      |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | sunil                 | Clerk       | 30      |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | shubham@gmail.com     | Engineer    | 40      |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | kumar@gmail.com       | Engineer    | 50      |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | mohit@gmail.com       | Salesman    |         |
++--------+-----------+------------+------------+-----------+-----------------------+-------------+---------+
+6 rows in set (0.00 sec)
+
+mysql> update empdet set DEPT_NO=60 WHERE EMP_ID="EMP007";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM empdet;
++--------+-----------+------------+------------+-----------+-----------------------+-------------+---------+
+| EMP_ID | FULL_NAME | MANAGER_ID | DOJ        | CITY      | Email                 | DESIGNATION | DEPT_NO |
++--------+-----------+------------+------------+-----------+-----------------------+-------------+---------+
+| EMP001 | ROY       | MNG101     | 1999-02-21 | BANGALORE | roy@gmail.com         | Analyst     | 10      |
+| EMP002 | MOHAN     | MNG102     | 1999-04-08 | GULBARGA  | mohanpujari@gmail.com | Manager     | 20      |
+| EMP003 | SUNIL     | MNG103     | 2002-08-21 | RAICHUR   | sunil                 | Clerk       | 30      |
+| EMP004 | SHUBHAM   | MNG104     | 1996-05-06 | MANGALORE | shubham@gmail.com     | Engineer    | 40      |
+| EMP005 | KUMAR     | MNG105     | 1992-03-04 | MYSURU    | kumar@gmail.com       | Engineer    | 50      |
+| EMP007 | MOHIT     | EMP002     | 1999-09-01 | Delhi     | mohit@gmail.com       | Salesman    | 60      |
++--------+-----------+------------+------------+-----------+-----------------------+-------------+---------+
+6 rows in set (0.00 sec)
+
+mysql> select e.FULL_NAME, s.SALARY FROM empdet e, empsal s where e.EMP_ID=s.EMP_ID BY SALARY ASC;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BY SALARY ASC' at line 1
+mysql> select e.FULL_NAME, s.SALARY FROM empdet e, empsal s where e.EMP_ID=s.EMP_ID ORDER BY SALARY ASC;
++-----------+--------+
+| FULL_NAME | SALARY |
++-----------+--------+
+| MOHIT     |      0 |
+| SUNIL     |   9200 |
+| SHUBHAM   |  22000 |
+| KUMAR     |  95000 |
+| ROY       | 350000 |
+| MOHAN     | 500000 |
++-----------+--------+
+6 rows in set (0.01 sec)
+
+mysql> SELECT SUBSTRING(NAME,1,5) AS NAME1TO5 FROM student;
+ERROR 1054 (42S22): Unknown column 'NAME' in 'field list'
+mysql> alter table student ADD NAME varchar(20) NOT NULL BEFORE SUB_CODE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BEFORE SUB_CODE' at line 1
+mysql> alter table student ADD NAME varchar(20) NOT NULL;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM student;
++----------+-------+------+
+| SUB_CODE | MARKS | NAME |
++----------+-------+------+
+| MCA001   |    80 |      |
+| MCA002   |   100 |      |
+| MCA003   |    70 |      |
+| MCA004   |    95 |      |
++----------+-------+------+
+4 rows in set (0.00 sec)
+
+mysql> insert into student(NAME) VALUES("KRISHAN");
+ERROR 1364 (HY000): Field 'SUB_CODE' doesn't have a default value
+mysql> UPDATE TABLE SET NAME="KRISHNA" WHERE MARKS="80";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABLE SET NAME="KRISHNA" WHERE MARKS="80"' at line 1
+mysql> UPDATE TABLE SET NAME="KRISHNA" WHERE MARKS=80;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABLE SET NAME="KRISHNA" WHERE MARKS=80' at line 1
+mysql> UPDATE TABLE student SET NAME="KRISHNA" WHERE MARKS=80;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABLE student SET NAME="KRISHNA" WHERE MARKS=80' at line 1
+mysql> UPDATE TABLE student SET NAME="KRISHNA" WHERE SUB_CODE=80;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABLE student SET NAME="KRISHNA" WHERE SUB_CODE=80' at line 1
+mysql> UPDATE student SET NAME="KRISHNA" WHERE SUB_CODE=80;
+ERROR 1292 (22007): Truncated incorrect DOUBLE value: 'MCA001'
+mysql> UPDATE student SET NAME="KRISHNA" WHERE SUB_CODE="80";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> SELECT * FROM student;
++----------+-------+------+
+| SUB_CODE | MARKS | NAME |
++----------+-------+------+
+| MCA001   |    80 |      |
+| MCA002   |   100 |      |
+| MCA003   |    70 |      |
+| MCA004   |    95 |      |
++----------+-------+------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE student SET NAME="GANESH" WHERE SUB_CODE="100";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> UPDATE student SET NAME="MAHAN" WHERE SUB_CODE="70";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> UPDATE student SET NAME="VENKATESHA" WHERE SUB_CODE="95";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> SELECT SUBSTRING(NAME,1,5) AS NAME1TO5 FROM student;
++----------+
+| NAME1TO5 |
++----------+
+|          |
+|          |
+|          |
+|          |
++----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT SUBSTRING(NAME,1,3) AS NAME1TO5 FROM student;
++----------+
+| NAME1TO5 |
++----------+
+|          |
+|          |
+|          |
+|          |
++----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT SUBSTRING(NAME,0,3) AS NAME1TO5 FROM student;
++----------+
+| NAME1TO5 |
++----------+
+|          |
+|          |
+|          |
+|          |
++----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT SUBSTRING(NAME,0,0) AS NAME1TO5 FROM student;
++----------+
+| NAME1TO5 |
++----------+
+|          |
+|          |
+|          |
+|          |
++----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT SUBSTRING(NAME, 1, 5) AS NAME1TO5 FROM student;
++----------+
+| NAME1TO5 |
++----------+
+|          |
+|          |
+|          |
+|          |
++----------+
+4 rows in set (0.00 sec)
+
+mysql>
